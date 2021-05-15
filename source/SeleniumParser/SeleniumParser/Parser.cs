@@ -9,6 +9,18 @@ namespace SeleniumParser
 	public class Parser
 	{
 
+		public void ParseTests(string sideFile, IWebDriver driver)
+		{
+			var tests = ConvertSideFileToModel(sideFile);
+			foreach (var test in tests.Tests)
+			{
+				var context = new Context(driver);
+				foreach (var comando in test.Commands)
+					CommandFactory.Create(context, comando.Command)
+						.Perform(tests, test, comando);
+			}
+		}
+
 		public void ParseOneTestByBrowserInstance(string sideFile, Func<IWebDriver> driverConstructor)
 		{
 			var tests = ConvertSideFileToModel(sideFile);
@@ -18,7 +30,7 @@ namespace SeleniumParser
 				{
 					var context = new Context(driver);
 					foreach (var comando in test.Commands)
-						CommandFactory.Criar(context, comando.Command)
+						CommandFactory.Create(context, comando.Command)
 							.Perform(tests, test, comando);
 				}
 			}
@@ -39,7 +51,7 @@ namespace SeleniumParser
 				foreach (var test in tests.Tests)
 				{
 					foreach (var comando in test.Commands)
-						CommandFactory.Criar(context, comando.Command)
+						CommandFactory.Create(context, comando.Command)
 							.Perform(tests, test, comando);
 				}
 			}
