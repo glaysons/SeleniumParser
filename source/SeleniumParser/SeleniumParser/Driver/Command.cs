@@ -12,7 +12,7 @@ namespace SeleniumParser.Driver
 
 		public Context Current { get; set; }
 
-		public abstract void Perform(SeleniumSideModel testes, SeleniumTestModel teste, SeleniumCommandModel comando);
+		public abstract void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel comand);
 
 		protected IWebElement SearchElement(SeleniumCommandModel sender)
 		{
@@ -33,26 +33,26 @@ namespace SeleniumParser.Driver
 
 		private IWebElement SearchWebElement(string[] item)
 		{
-			var tipo = item[1];
-			var valor = item[0].Split('=')[1];
+			var itemType = item[1];
+			var itemValue = item[0].Split('=')[1];
 
-			if (tipo.IsEquals("id"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Id(valor)));
+			if (itemType.IsEquals("id"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Id(itemValue)));
 
-			if (tipo.IsEquals("name"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Name(valor)));
+			if (itemType.IsEquals("name"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Name(itemValue)));
 
-			if (tipo.IsEquals("css:finder"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.CssSelector(valor)));
+			if (itemType.IsEquals("css:finder"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.CssSelector(itemValue)));
 
-			if (tipo.IsEquals("xpath:attributes"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(valor)));
+			if (itemType.IsEquals("xpath:attributes"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(itemValue)));
 
-			if (tipo.IsEquals("xpath:idRelative"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(valor)));
+			if (itemType.IsEquals("xpath:idRelative"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(itemValue)));
 
-			if (tipo.IsEquals("xpath:position"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(valor)));
+			if (itemType.IsEquals("xpath:position"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(itemValue)));
 
 			return null;
 		}

@@ -14,7 +14,7 @@ namespace SeleniumParser.Driver
 
 		public Actions Actions { get; }
 
-		public string UltimoAlerta { get; set; }
+		public string LastAlert { get; set; }
 
 		public Context(IWebDriver driver)
 		{

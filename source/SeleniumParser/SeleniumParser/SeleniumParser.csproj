@@ -55,6 +55,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AssertConfirmationCommand.cs" />
+    <Compile Include="Commands\ChooseCancelOnNextConfirmationCommand.cs" />
+    <Compile Include="Commands\ChooseOkOnNextConfirmationCommand.cs" />
+    <Compile Include="Commands\ClearCommand.cs" />
+    <Compile Include="Commands\ClickCommand.cs" />
+    <Compile Include="Commands\CloseCommand.cs" />
+    <Compile Include="Commands\DoubleClickCommand.cs" />
+    <Compile Include="Commands\MouseOutCommand.cs" />
+    <Compile Include="Commands\MouseOverCommand.cs" />
+    <Compile Include="Commands\OpenCommand.cs" />
+    <Compile Include="Commands\SelectFrameCommand.cs" />
+    <Compile Include="Commands\SendKeysCommand.cs" />
+    <Compile Include="Commands\SetWindowSizeCommand.cs" />
+    <Compile Include="Commands\TypeCommand.cs" />
+    <Compile Include="Commands\WebDriverChooseCancelOnVisibleConfirmationCommand.cs" />
+    <Compile Include="Commands\WebDriverChooseOkOnVisibleConfirmationCommand.cs" />
     <Compile Include="Driver\Command.cs" />
     <Compile Include="Driver\CommandFactory.cs" />
     <Compile Include="Driver\Context.cs" />
@@ -70,8 +86,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
