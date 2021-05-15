@@ -2,7 +2,7 @@
 
 SeleniumParser é um interpretador de arquivos .SIDE gerados pela IDE do Selenium.
 
-O objetivo é utilizar as gravações dos testes de usabilidade gerados pela própria IDE do Selenium nos testes unitários, de forma bem simples e de fácil manutenção.
+O objetivo é utilizar as gravações dos testes de usabilidade gerados pela própria IDE do Selenium nos testes automatizados, de forma bem simples e de fácil manutenção.
 
 O desenvolvedor utiliza estes arquivos apenas como referência ao criar testes unitários.
 
