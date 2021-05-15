@@ -55,6 +55,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Driver\Command.cs" />
+    <Compile Include="Driver\CommandFactory.cs" />
     <Compile Include="Driver\Context.cs" />
     <Compile Include="Driver\ICommand.cs" />
     <Compile Include="Driver\StringExtensions.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Models\SeleniumSideModel.cs" />
     <Compile Include="Models\SeleniumSuiteModel.cs" />
     <Compile Include="Models\SeleniumTestModel.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
