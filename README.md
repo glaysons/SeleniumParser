@@ -10,7 +10,7 @@ O desenvolvedor utiliza estes arquivos apenas como referência ao criar testes u
 
 ### Instalar ###
 
-Disponível via **nuget**. ***Ainda em desenvolvimento***
+Disponível via **nuget**.
 
 ```
 PM> Install-Package SeleniumParser.Parser
@@ -35,3 +35,13 @@ O Parser possui 3 métodos, sendo:
 - **ParseTests** : Você é responsável por gerenciar todo o ciclo de vida da instância do Browser;
 - **ParseOneTestByBrowserInstance** : Será instanciado um Browser para cada teste existente no arquivo .SIDE;
 - **ParseAllTestsOnSameBrowserInstance** : Será utilizado apenas uma instância do Browser para a execução de todos os testes existentes no arquivo .SIDE;
+
+### Gravação dos Arquivos SIDE ###
+
+Os arquivos SIDE interpretados pelo parser são gerados pela seguinte extensão do Google Chrome:
+
+https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd
+
+Basta realizar a gravação e pedir para salvar, automaticamente a ferramenta irá sugerir um arquivo .SIDE para ser salvo.
+
+Os testes foram realizados com a versão 3.17 da extensão.

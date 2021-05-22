@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" ?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+	<metadata>
+		<id>SeleniumParser</id>
+		<version>$version$</version>
+		<title>Selenium File Parser</title>
+		<authors>Glayson Sergio</authors>
+		<owners>Glayson Sergio</owners>
+		<projectUrl>https://github.com/glaysons/SeleniumParser</projectUrl>
+		<license type="file">License.txt</license>
+		<icon>SeleniumParserIcon.min.png</icon>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>SeleniumParser é um interpretador de arquivos .SIDE gerados pela IDE do Selenium. O objetivo é utilizar as gravações dos testes de usabilidade gerados pela própria IDE do Selenium nos testes automatizados, de forma bem simples e de fácil manutenção.</description>
+		<copyright>Copyright © Glayson Sergio 2021</copyright>
+		<tags>selenium ui tests side file</tags>
+		<dependencies>
+			<dependency id="Newtonsoft.Json" version="13.0.1" />
+			<dependency id="FluentAssertions" version="5.10.3" />
+			<dependency id="Selenium.WebDriver" version="3.141.0" />
+			<dependency id="DotNetSeleniumExtras.WaitHelpers" version="3.11.0" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="License.txt" target="" />
+		<file src="SeleniumParserIcon.min.png" target=""/>
+	</files>
+</package>
