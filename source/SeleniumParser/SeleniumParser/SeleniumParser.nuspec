@@ -7,8 +7,8 @@
 		<authors>Glayson Sergio</authors>
 		<owners>Glayson Sergio</owners>
 		<projectUrl>https://github.com/glaysons/SeleniumParser</projectUrl>
-		<license type="file">License.txt</license>
-		<icon>SeleniumParserIcon.min.png</icon>
+		<license type="expression">MIT</license>
+		<iconUrl>https://github.com/glaysons/SeleniumParser/blob/main/SeleniumParserIcon.min.png?raw=true</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>SeleniumParser é um interpretador de arquivos .SIDE gerados pela IDE do Selenium. O objetivo é utilizar as gravações dos testes de usabilidade gerados pela própria IDE do Selenium nos testes automatizados, de forma bem simples e de fácil manutenção.</description>
 		<copyright>Copyright © Glayson Sergio 2021</copyright>
@@ -20,8 +20,4 @@
 			<dependency id="DotNetSeleniumExtras.WaitHelpers" version="3.11.0" />
 		</dependencies>
 	</metadata>
-	<files>
-		<file src="License.txt" target="" />
-		<file src="SeleniumParserIcon.min.png" target=""/>
-	</files>
 </package>
