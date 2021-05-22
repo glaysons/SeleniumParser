@@ -13,7 +13,7 @@ O desenvolvedor utiliza estes arquivos apenas como referência ao criar testes u
 Disponível via **nuget**.
 
 ```
-PM> Install-Package SeleniumParser.Parser
+PM> Install-Package SeleniumParser.Parser -Version 1.0.1
 ```
 
 ### Criação dos Testes ###
