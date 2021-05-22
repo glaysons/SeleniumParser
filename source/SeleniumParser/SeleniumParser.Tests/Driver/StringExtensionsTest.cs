@@ -44,5 +44,27 @@ namespace SeleniumParser.Tests.Driver
 				.BeFalse();
 		}
 
+		[TestMethod]
+		public void SeUmTextoIniciarComOutroDeveRetornarValorEsperado()
+		{
+			string text = null;
+
+			text.StartsWithText("testes de")
+				.Should()
+				.BeFalse();
+
+			"TESTES DE INTEGRAÇÃO".StartsWithText("testes de")
+				.Should()
+				.BeTrue();
+
+			"TESTES DE INTEGRAÇÕES".StartsWithText("teste de")
+				.Should()
+				.BeFalse();
+
+			"TESTES DE INTEGRAÇÕES".StartsWithText(null)
+				.Should()
+				.BeFalse();
+		}
+
 	}
 }
