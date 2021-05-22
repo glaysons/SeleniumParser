@@ -22,5 +22,11 @@ namespace SeleniumParser.Driver
 			return (sender?.IndexOf(text, StringComparison.OrdinalIgnoreCase) > -1);
 		}
 
+		public static bool StartsWithText(this string sender, string text)
+		{
+			return (!string.IsNullOrEmpty(text))
+				&& (sender?.StartsWith(text, StringComparison.OrdinalIgnoreCase) == true);
+		}
+
 	}
 }

@@ -16,14 +16,16 @@ namespace SeleniumParser.Driver
 
 		protected IWebElement SearchElement(SeleniumCommandModel sender)
 		{
-			foreach (var item in sender.Targets)
+			foreach (var target in sender.Targets)
 			{
-				if ((item.Length < 2) || !item[0].ContainsText("="))
-					continue;
+				if (TryGetTargetElement(target, out IWebElement element) && (element != null))
+					return element;
+			}
 
-				var element = SearchWebElement(item);
-
-				if (element != null)
+			if (!string.IsNullOrEmpty(sender.Target))
+			{
+				var target = CreateTarget(sender.Target);
+				if ((target != null) && TryGetTargetElement(target, out IWebElement element) && (element != null))
 					return element;
 			}
 
@@ -31,30 +33,61 @@ namespace SeleniumParser.Driver
 			throw new Exception(message.ToString());
 		}
 
-		private IWebElement SearchWebElement(string[] item)
+		private bool TryGetTargetElement(string[] target, out IWebElement element)
 		{
-			var itemType = item[1];
-			var itemValue = item[0].Split('=')[1];
+			if ((target.Length < 2) || !target[0].ContainsText("="))
+			{
+				element = null;
+				return false;
+			}
 
-			if (itemType.IsEquals("id"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Id(itemValue)));
+			element = SearchWebElement(target);
+			return true;
+		}
 
-			if (itemType.IsEquals("name"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Name(itemValue)));
+		private IWebElement SearchWebElement(string[] target)
+		{
+			var targetType = target[1];
+			var targetValue = target[0].Split('=')[1];
 
-			if (itemType.IsEquals("css:finder"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.CssSelector(itemValue)));
+			if (targetType.IsEquals("id"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Id(targetValue)));
 
-			if (itemType.IsEquals("xpath:attributes"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(itemValue)));
+			if (targetType.IsEquals("name"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Name(targetValue)));
 
-			if (itemType.IsEquals("xpath:idRelative"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(itemValue)));
+			if (targetType.IsEquals("css:finder"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.CssSelector(targetValue)));
 
-			if (itemType.IsEquals("xpath:position"))
-				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(itemValue)));
+			if (targetType.IsEquals("xpath:attributes"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(targetValue)));
+
+			if (targetType.IsEquals("xpath:idRelative"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(targetValue)));
+
+			if (targetType.IsEquals("xpath:position"))
+				return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(targetValue)));
 
 			return null;
+		}
+
+		private string[] CreateTarget(string target)
+		{
+			string targetType = null;
+
+			if (target.StartsWithText("css="))
+				targetType = "css:finder";
+
+			else if (target.StartsWithText("id="))
+				targetType = "id";
+
+			else if (target.StartsWithText("name="))
+				targetType = "name";
+
+			if (targetType == null)
+				return null;
+
+			return new[] { target, targetType };
 		}
 
 		private StringBuilder CreateMessage(SeleniumCommandModel sender)
