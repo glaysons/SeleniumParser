@@ -13,7 +13,7 @@ O desenvolvedor utiliza estes arquivos apenas como referência ao criar testes u
 Disponível via **nuget**.
 
 ```
-PM> Install-Package SeleniumParser.Parser -Version 1.0.1
+PM> Install-Package SeleniumParser.Parser -Version 1.0.2
 ```
 
 ### Criação dos Testes ###
@@ -45,3 +45,9 @@ https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackb
 Basta realizar a gravação e pedir para salvar, automaticamente a ferramenta irá sugerir um arquivo .SIDE para ser salvo.
 
 Os testes foram realizados com a versão 3.17 da extensão.
+
+## Detalhes das Últimas Versões ##
+
+v1.0.2
+- Correção dos **comandos ChooseOkOnNextConfirmationCommand e ChooseCancelOnNextConfirmationCommand** para validarem após o próximo comando existente;
+- Inutilização momentânea dos comandos *WebDriverChooseOkOnVisibleConfirmationCommand e WebDriverChooseCancelOnVisibleConfirmationCommand*;
