@@ -4,7 +4,7 @@ using SeleniumParser.Models;
 
 namespace SeleniumParser.Commands
 {
-	public class ChooseCancelOnNextConfirmationCommand : Command
+	public class ChooseCancelOnNextConfirmationCommand : Command, INextCommand
 	{
 		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel comand)
 		{
@@ -18,5 +18,6 @@ namespace SeleniumParser.Commands
 
 			alert.Dismiss();
 		}
+
 	}
 }

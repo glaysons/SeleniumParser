@@ -14,6 +14,8 @@ namespace SeleniumParser.Driver
 
 		public Actions Actions { get; }
 
+		public ICommand LastCommand { get; set; }
+
 		public string LastAlert { get; set; }
 
 		public Context(IWebDriver driver)

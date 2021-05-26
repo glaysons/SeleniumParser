@@ -4,7 +4,7 @@ using SeleniumParser.Models;
 
 namespace SeleniumParser.Commands
 {
-	public class ChooseOkOnNextConfirmationCommand : Command
+	public class ChooseOkOnNextConfirmationCommand : Command, INextCommand
 	{
 		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel comand)
 		{
