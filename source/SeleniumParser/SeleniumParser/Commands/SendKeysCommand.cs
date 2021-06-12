@@ -3,6 +3,7 @@ using OpenQA.Selenium;
 using System.Text;
 using SeleniumParser.Driver;
 using SeleniumParser.Models;
+using SeleniumParser.Delegates;
 
 namespace SeleniumParser.Commands
 {
@@ -16,7 +17,16 @@ namespace SeleniumParser.Commands
 				.Should()
 				.NotBeNull();
 
-			element.SendKeys(FindKeys(comand));
+			var preventDefault = false;
+
+			var customEvent = GetCustomEvent<SendKeysCommandDelegate>();
+
+			var value = FindKeys(comand);
+
+			customEvent?.Invoke(tests, test, comand, element, ref value, ref preventDefault);
+
+			if (!preventDefault)
+				element.SendKeys(value);
 		}
 
 		private string FindKeys(SeleniumCommandModel sender)

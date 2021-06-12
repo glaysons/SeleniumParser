@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SeleniumParser.Delegates;
 using SeleniumParser.Driver;
 using SeleniumParser.Models;
 
@@ -14,7 +15,14 @@ namespace SeleniumParser.Commands
 				.Should()
 				.NotBeNull();
 
-			Current.Actions.DoubleClick(element).Perform();
+			var preventDefault = false;
+
+			var customEvent = GetCustomEvent<DoubleClickCommandDelegate>();
+
+			customEvent?.Invoke(tests, test, comand, element, ref preventDefault);
+
+			if (!preventDefault)
+				Current.Actions.DoubleClick(element).Perform();
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SeleniumParser.Delegates;
 using SeleniumParser.Driver;
 using SeleniumParser.Models;
 
@@ -14,7 +15,16 @@ namespace SeleniumParser.Commands
 				.Should()
 				.NotBeNull();
 
-			element.SendKeys(comand.Value);
+			var preventDefault = false;
+
+			var customEvent = GetCustomEvent<TypeCommandDelegate>();
+
+			var value = comand.Value;
+
+			customEvent?.Invoke(tests, test, comand, element, ref value, ref preventDefault);
+
+			if (!preventDefault)
+				element.SendKeys(value);
 		}
 	}
 }
