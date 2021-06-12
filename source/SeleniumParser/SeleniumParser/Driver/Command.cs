@@ -114,5 +114,12 @@ namespace SeleniumParser.Driver
 			wait.Until(wd => (DateTime.Now - now) - TimeSpan.FromMilliseconds(delay) > TimeSpan.Zero);
 		}
 
+		protected T GetCustomEvent<T>() where T : Delegate
+		{
+			if (Current.Events.TryGetValue(typeof(T), out Delegate customEvent))
+				return customEvent as T;
+			return null;
+		}
+
 	}
 }
