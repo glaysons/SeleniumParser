@@ -80,6 +80,10 @@
     <Compile Include="Commands\TypeCommand.cs" />
     <Compile Include="Commands\WebDriverChooseCancelOnVisibleConfirmationCommand.cs" />
     <Compile Include="Commands\WebDriverChooseOkOnVisibleConfirmationCommand.cs" />
+    <Compile Include="Delegates\DoubleClickCommandDelegate.cs" />
+    <Compile Include="Delegates\ClickCommandDelegate.cs" />
+    <Compile Include="Delegates\SendKeysCommandDelegate.cs" />
+    <Compile Include="Delegates\TypeCommandDelegate.cs" />
     <Compile Include="Driver\Command.cs" />
     <Compile Include="Driver\CommandFactory.cs" />
     <Compile Include="Driver\Context.cs" />
