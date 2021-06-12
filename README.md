@@ -46,7 +46,22 @@ Basta realizar a gravação e pedir para salvar, automaticamente a ferramenta ir
 
 Os testes foram realizados com a versão 3.17 da extensão.
 
+## Eventos ##
+
+O Parser possui eventos que permitem personalizar as informações enviadas ao Browser. 
+
+Todos os eventos possuem as informações do teste que está sendo executado, assim como, uma variável chamada **preventDefault** que, quando modificada para verdadeiro, faz com que a execução do comando seja cancelada.
+
+Eventos:
+- **OnTypeCommand** : Permite identificar e personalizar o conteúdo/texto a ser enviado para o elemento selecionado;
+- **OnSendKeysCommand** : Da mesma forma que o evento **Type**, porém, personalizando o envio de teclas especiais;
+- **OnClickCommand** : Personalização do evento de clique nos elementos;
+- **OnDoubleClickCommand** : Personalização do evento de duplo clique nos elementos;
+
 ## Detalhes das Últimas Versões ##
+
+v1.0.3
+- Criação de eventos para permitir personalizar os valores enviados ao Browser;
 
 v1.0.2
 - Correção dos **comandos ChooseOkOnNextConfirmationCommand e ChooseCancelOnNextConfirmationCommand** para validarem após o próximo comando existente;
