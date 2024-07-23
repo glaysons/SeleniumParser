@@ -9,9 +9,9 @@ namespace SeleniumParser.Commands
 {
 	public class SendKeysCommand : Command
 	{
-		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel comand)
+		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel command)
 		{
-			var element = SearchElement(comand);
+			var element = SearchElement(command);
 
 			element
 				.Should()
@@ -21,9 +21,9 @@ namespace SeleniumParser.Commands
 
 			var customEvent = GetCustomEvent<SendKeysCommandDelegate>();
 
-			var value = FindKeys(comand);
+			var value = FindKeys(command);
 
-			customEvent?.Invoke(tests, test, comand, element, ref value, ref preventDefault);
+			customEvent?.Invoke(tests, test, command, element, ref value, ref preventDefault);
 
 			if (!preventDefault)
 				element.SendKeys(value);

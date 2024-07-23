@@ -3,7 +3,10 @@ using SeleniumParser.Delegates;
 using SeleniumParser.Driver;
 using SeleniumParser.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace SeleniumParser
 {
@@ -45,15 +48,55 @@ namespace SeleniumParser
 				context.Events.Add(typeof(T), onCommand);
 		}
 
+		private void ApplyVariables(SeleniumCommandModel command)
+		{
+            command.Value = ReplaceVariables(command.Value, command.Variables);
+            command.Target = ReplaceVariables(command.Target, command.Variables);
+			if(command.Targets != null)
+			{
+                List<string[]> targets = new List<string[]>();
+                foreach (var t in command.Targets)
+                {
+                    List<string> ts = new List<string>();
+                    for (var i = 0; i < t.Length; i++)
+                    {
+						ts.Add(ReplaceVariables(t[i], command.Variables));
+                    }
+					targets.Add(ts.ToArray());
+                }
+                command.Targets = targets;
+            }
+        }
+        private string ReplaceVariables(string text, IDictionary<string,object> variables)
+		{
+			if (string.IsNullOrEmpty(text))
+				return text;
+
+            var regEx = "\\${[\\w;.;-;_]*}";
+			foreach(Match match in Regex.Matches(text, regEx))
+			{
+				var key = match.Value.Replace("${", "").Replace("}", "");
+				if (variables.ContainsKey(key))
+				{
+					text = text.Replace(match.Value, variables[key].ToString());
+                }
+			}
+			return text;
+        }
+
 		private void PerformCommand(SeleniumSideModel tests, Context context, SeleniumTestModel test, SeleniumCommandModel command)
 		{
-			var current = CommandFactory.Create(context, command.Command);
+			command.Variables = context.Variables;
+			ApplyVariables(command);
+            var current = CommandFactory.Create(context, command.Command);
 			if (!(current is INextCommand))
-				current.Perform(tests, test, command);
+				current.PerformInternal(tests, test, command);
 			if (context.LastCommand is INextCommand)
-				context.LastCommand.Perform(tests, test, command);
+				context.LastCommand.PerformInternal(tests, test, command);
 			context.LastCommand = current;
-		}
+            context.Variables = command.Variables;
+
+        }
 
 		public void ParseOneTestByBrowserInstance(string sideFile, Func<IWebDriver> driverConstructor)
 		{
@@ -75,19 +118,24 @@ namespace SeleniumParser
 				return Newtonsoft.Json.JsonConvert.DeserializeObject<SeleniumSideModel>(arquivo.ReadToEnd());
 		}
 
-		public void ParseAllTestsOnSameBrowserInstance(string sideFile, Func<IWebDriver> driverConstructor)
+		public void ParseAllTestsOnSameBrowserInstance(string sideFile, Func<IWebDriver> driverConstructor, Dictionary<string, object> inputParameters = null)
 		{
 			var tests = ConvertSideFileToModel(sideFile);
 			using (var driver = driverConstructor())
 			{
 				var context = CreateContext(driver);
-				foreach (var test in tests.Tests)
+				context.Variables = inputParameters?? new Dictionary<string, object>();
+
+                foreach (var test in tests.Tests)
 				{
 					foreach (var command in test.Commands)
-						PerformCommand(tests, context, test, command);
+						if(!command.Command.StartsWith("//"))
+							PerformCommand(tests, context, test, command);
 				}
 			}
 		}
+
+
 
 	}
 }
