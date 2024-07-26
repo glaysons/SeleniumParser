@@ -14,7 +14,7 @@ namespace SeleniumParser.Commands
         public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel command)
         {
             var waitTime = 2000;
-            int.TryParse(command.Target, out waitTime);
+            int.TryParse(command.Value, out waitTime);
             WaitElementVisible(waitTime,command);
             
         }

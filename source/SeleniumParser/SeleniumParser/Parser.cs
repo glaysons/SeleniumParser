@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace SeleniumParser
 {
@@ -19,7 +20,9 @@ namespace SeleniumParser
 
 		public ClickCommandDelegate OnClickCommand { get; set; }
 
-		public DoubleClickCommandDelegate OnDoubleClickCommand { get; set; }
+        public CommandCompleteDelegate OnCommandComplete { get; set; }
+
+        public DoubleClickCommandDelegate OnDoubleClickCommand { get; set; }
 
 		public void ParseTests(string sideFile, IWebDriver driver)
 		{
@@ -39,7 +42,8 @@ namespace SeleniumParser
 			AddContextEvent(context, OnSendKeysCommand);
 			AddContextEvent(context, OnClickCommand);
 			AddContextEvent(context, OnDoubleClickCommand);
-			return context;
+            AddContextEvent(context, OnCommandComplete);
+            return context;
 		}
 
 		private void AddContextEvent<T>(Context context, T onCommand) where T : Delegate
@@ -107,7 +111,10 @@ namespace SeleniumParser
 				{
 					var context = CreateContext(driver);
 					foreach (var command in test.Commands)
-						PerformCommand(tests, context, test, command);
+					{
+                        PerformCommand(tests, context, test, command);
+                    }
+						
 				}
 			}
 		}
@@ -129,8 +136,11 @@ namespace SeleniumParser
                 foreach (var test in tests.Tests)
 				{
 					foreach (var command in test.Commands)
-						if(!command.Command.StartsWith("//"))
-							PerformCommand(tests, context, test, command);
+						if (!command.Command.StartsWith("//"))
+						{
+                            PerformCommand(tests, context, test, command);
+                        }
+							
 				}
 			}
 		}

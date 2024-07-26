@@ -1,11 +1,14 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SeleniumParser.Delegates;
 using SeleniumParser.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace SeleniumParser.Driver
 {
@@ -18,12 +21,48 @@ namespace SeleniumParser.Driver
 
 		public void PerformInternal(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel command)
 		{
-			LoadWindowHandles(command);
-			Perform(tests, test, command);
-			if (command.OpensWindow)
-			{
-				command.Variables[command.WindowHandleName] = WaitForWindow(command);
-			}
+            var eventArgs = new CommandCompleteEventArgs()
+            {
+                StartDate = DateTime.Now,
+                Success = true
+            };
+
+            var customEvent = GetCustomEvent<CommandCompleteDelegate>();
+
+            var vars = new Dictionary<string, object>();
+            foreach (var key in command.Variables.Keys)
+                vars.Add(key, command.Variables[key]);
+
+            try
+            {
+                LoadWindowHandles(command);
+                Perform(tests, test, command);
+                if (command.OpensWindow)
+                {
+                    command.Variables[command.WindowHandleName] = WaitForWindow(command);
+                }
+                var newVars = new Dictionary<string, object>();
+                foreach(var key in vars.Keys)
+                {
+                    if(!command.Variables.ContainsKey(key) || command.Variables[key] != vars[key])
+                    {
+                        newVars.Add(key, vars[key]);
+                    }
+                }
+                eventArgs.EndDate = DateTime.Now;
+                eventArgs.ChangedVariables = newVars;
+            }
+            catch (Exception ex)
+            {
+                eventArgs.EndDate = DateTime.Now;
+                eventArgs.Success = false;
+                eventArgs.Exception = ex;
+            }
+            customEvent?.Invoke(tests, test, command, eventArgs);
+
+            if (eventArgs.Exception != null)
+                throw eventArgs.Exception;
+
         }
 
 
@@ -41,29 +80,56 @@ namespace SeleniumParser.Driver
 		protected bool TryGetElement(SeleniumCommandModel sender, out IWebElement el)
 		{
 			IWebElement element = null;
-
-            var elementFound = Current.Wait.Until(d =>
+            try
             {
-                foreach (var target in sender.Targets)
+                Current.Wait.Timeout = TimeSpan.FromSeconds(60);
+                Current.Wait.PollingInterval = TimeSpan.FromSeconds(1);
+                var elementFound = Current.Wait.Until(d =>
                 {
-                    if (TryGetTargetElement(target, out element) && (element != null))
-                        return true;
-                }
+                    return TryGetElementInternal(Current.Driver, sender, out element);
+                });
+                el = element;
+                return elementFound;
 
-                if (!string.IsNullOrEmpty(sender.Target))
-                {
-                    var target = CreateTarget(sender.Target);
-                    if ((target != null) && TryGetTargetElement(target, out element) && (element != null))
-                        return true;
-                }
+            }
+            catch
+            {
+                el = null;
                 return false;
-            });
 
-			el = element;
-			return elementFound;
+            }
+
         }
 
-        private bool TryGetTargetElement(string[] target, out IWebElement element)
+        private bool TryGetElementInternal(IWebDriver driver,SeleniumCommandModel sender, out IWebElement el)
+        {
+            IWebElement element = null;
+
+            foreach (var target in sender.Targets)
+            {
+                if (TryGetTargetElement(driver,target, out element) && (element != null))
+                {
+                    el = element;
+                    return true;
+                }
+
+            }
+
+            if (!string.IsNullOrEmpty(sender.Target))
+            {
+                var target = CreateTarget(sender.Target);
+                if ((target != null) && TryGetTargetElement(driver, target, out element) && (element != null))
+                {
+                    el = element;
+                    return true;
+                }
+            }
+
+            el = null;
+            return false;
+        }
+
+        private bool TryGetTargetElement(IWebDriver driver,string[] target, out IWebElement element)
 		{
 			if ((target.Length < 2) || !target[0].ContainsText("="))
 			{
@@ -71,34 +137,96 @@ namespace SeleniumParser.Driver
 				return false;
 			}
 
-			element = SearchWebElement(target);
-			return true;
+			element = SearchWebElement(driver, target);
+			return element != null;
 		}
 
-		private IWebElement SearchWebElement(string[] target)
+        protected int CountElements(SeleniumCommandModel sender)
+        {
+            List<IWebElement> elements = new List<IWebElement>();
+
+            foreach (var target in sender.Targets)
+            {
+                if (!((target.Length < 2) || !target[0].ContainsText("=")))
+                    elements.AddRange(SearchWebElements(Current.Driver, target));
+            }
+
+            if (!string.IsNullOrEmpty(sender.Target))
+            {
+                var target = CreateTarget(sender.Target);
+                if (target != null) 
+                {
+                    elements.AddRange(SearchWebElements(Current.Driver, target));
+                }
+            }
+            
+            return elements.Distinct().Count();
+        }
+
+        private IList<IWebElement> SearchWebElements(IWebDriver driver, string[] target)
+        {
+            var targetType = target[1];
+            var targetValue = target[0];
+            targetValue = targetValue.Replace($"{targetValue.Split('=')[0]}=", "");
+
+            try
+            {
+                switch (targetType)
+                {
+                    case "id":
+                        return driver.FindElements(By.Id(targetValue));
+                    case "name":
+                        return driver.FindElements(By.Name(targetValue));
+                    case "css:finder":
+                        return driver.FindElements(By.CssSelector(targetValue));
+                    case "xpath":
+                    case "xpath:attributes":
+                    case "xpath:idRelative":
+                    case "xpath:position":
+                        return driver.FindElements(By.XPath(targetValue));
+                    case "linkText":
+                        return driver.FindElements(By.LinkText(targetValue));
+                    default:
+                        return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private IWebElement SearchWebElement(IWebDriver driver,string[] target)
 		{
 			var targetType = target[1];
 			var targetValue = target[0];
             targetValue = targetValue.Replace($"{targetValue.Split('=')[0]}=","");
 
-			switch (targetType)
+			try
 			{
-				case "id":
-                    return Current.Driver.FindElement(By.Id(targetValue));
-				case "name":
-                    return Current.Driver.FindElement(By.Name(targetValue));
-				case "css:finder":
-                    return Current.Driver.FindElement(By.CssSelector(targetValue));
-				case "xpath:attributes":
-                    return Current.Driver.FindElement(By.XPath(targetValue));
-				case "xpath:idRelative":
-                    return Current.Driver.FindElement(By.XPath(targetValue));
-				case "xpath:position":
-                    return Current.Driver.FindElement(By.XPath(targetValue));
-                case "linkText":
-                    return Current.Wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.LinkText(targetValue)));
-				default:
-                    return null;
+                switch (targetType)
+                {
+                    case "id":
+                        return driver.FindElement(By.Id(targetValue));
+                    case "name":
+                        return driver.FindElement(By.Name(targetValue));
+                    case "css:finder":
+                        return driver.FindElement(By.CssSelector(targetValue));
+                    case "xpath":
+                    case "xpath:attributes":
+                    case "xpath:idRelative":
+                    case "xpath:position":
+                    case "xpath:innerText":
+                        return driver.FindElement(By.XPath(targetValue));
+                    case "linkText":
+                        return driver.FindElement(By.LinkText(targetValue));
+                    default:
+                        return null;
+                }
+            }
+            catch
+            {
+                return null;
             }
         }
 
@@ -117,6 +245,8 @@ namespace SeleniumParser.Driver
 
 			else if(target.StartsWithText("linkText="))
                 targetType = "linkText";
+            else if (target.StartsWithText("xpath="))
+                targetType = "xpath";
 
             if (targetType == null)
 				return null;
@@ -153,7 +283,15 @@ namespace SeleniumParser.Driver
             var now = DateTime.Now;
             var wait = new WebDriverWait(Current.Driver, TimeSpan.FromMilliseconds(delay));
             wait.PollingInterval = TimeSpan.FromMilliseconds(1000);
-			wait.Until(wd => TryGetElement(sender, out var element));
+			wait.Until(wd => TryGetElementInternal(wd,sender, out var element));
+
+        }
+        protected void WaitElementNotPresent(double delay, SeleniumCommandModel sender)
+        {
+            var now = DateTime.Now;
+            var wait = new WebDriverWait(Current.Driver, TimeSpan.FromMilliseconds(delay));
+            wait.PollingInterval = TimeSpan.FromMilliseconds(1000);
+            wait.Until(wd => !TryGetElementInternal(wd, sender, out var element));
 
         }
 
@@ -162,7 +300,7 @@ namespace SeleniumParser.Driver
             var now = DateTime.Now;
             var wait = new WebDriverWait(Current.Driver, TimeSpan.FromMilliseconds(delay));
             wait.PollingInterval = TimeSpan.FromMilliseconds(1000);
-            wait.Until(wd => TryGetElement(sender, out var element) && element.Displayed);
+            wait.Until(wd => TryGetElementInternal(wd,sender, out var element) && element.Displayed);
         }
 
         protected void LoadWindowHandles(SeleniumCommandModel command)

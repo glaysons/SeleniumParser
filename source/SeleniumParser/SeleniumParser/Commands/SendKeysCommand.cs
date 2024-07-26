@@ -33,8 +33,10 @@ namespace SeleniumParser.Commands
 		{
 			var teclas = new StringBuilder();
 
-			if (sender.Value.ContainsText("${KEY_ENTER}"))
-				teclas.Append(Keys.Enter);
+			teclas.Append(sender.Value.Replace("${KEY_ENTER}", ""));
+
+         //   if (sender.Value.ContainsText("${KEY_ENTER}"))
+			teclas.Append(Keys.Enter);
 
 			return teclas.ToString();
 		}
