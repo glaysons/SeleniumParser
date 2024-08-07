@@ -6,7 +6,7 @@ namespace SeleniumParser.Commands
 {
 	public class ChooseOkOnNextConfirmationCommand : Command, INextCommand
 	{
-		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel comand)
+		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel command)
 		{
 			var alert = Current.Driver.SwitchTo().Alert();
 

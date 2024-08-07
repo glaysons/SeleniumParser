@@ -5,7 +5,7 @@ namespace SeleniumParser.Commands
 {
 	public class WebDriverChooseCancelOnVisibleConfirmationCommand : Command
 	{
-		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel comand)
+		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel command)
 		{
 
 		}

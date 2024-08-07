@@ -63,6 +63,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AssertCommand.cs" />
+    <Compile Include="Commands\AssertTextCommand.cs" />
     <Compile Include="Commands\AssertConfirmationCommand.cs" />
     <Compile Include="Commands\AssertElementPresentCommand.cs" />
     <Compile Include="Commands\ChooseCancelOnNextConfirmationCommand.cs" />
@@ -74,12 +76,22 @@
     <Compile Include="Commands\MouseOutCommand.cs" />
     <Compile Include="Commands\MouseOverCommand.cs" />
     <Compile Include="Commands\OpenCommand.cs" />
+    <Compile Include="Commands\SelectWindowCommand.cs" />
+    <Compile Include="Commands\StoreXpathCountCommand.cs" />
+    <Compile Include="Commands\StoreWindowHandleCommand.cs" />
+    <Compile Include="Commands\WaitForElementNotPresentCommand.cs" />
+    <Compile Include="Commands\WaitForElementVisibleCommand.cs" />
+    <Compile Include="Commands\WaitForElementPresentCommand.cs" />
     <Compile Include="Commands\SelectFrameCommand.cs" />
     <Compile Include="Commands\SendKeysCommand.cs" />
     <Compile Include="Commands\SetWindowSizeCommand.cs" />
+    <Compile Include="Commands\PauseCommand.cs" />
+    <Compile Include="Commands\StoreValueCommand.cs" />
+    <Compile Include="Commands\StoreCommand.cs" />
     <Compile Include="Commands\TypeCommand.cs" />
     <Compile Include="Commands\WebDriverChooseCancelOnVisibleConfirmationCommand.cs" />
     <Compile Include="Commands\WebDriverChooseOkOnVisibleConfirmationCommand.cs" />
+    <Compile Include="Delegates\CommandCompleteDelegate.cs" />
     <Compile Include="Delegates\DoubleClickCommandDelegate.cs" />
     <Compile Include="Delegates\ClickCommandDelegate.cs" />
     <Compile Include="Delegates\SendKeysCommandDelegate.cs" />
@@ -90,6 +102,7 @@
     <Compile Include="Driver\ICommand.cs" />
     <Compile Include="Driver\INextCommand.cs" />
     <Compile Include="Driver\StringExtensions.cs" />
+    <Compile Include="Models\CommandCompleteEventArgs.cs" />
     <Compile Include="Models\SeleniumCommandModel.cs" />
     <Compile Include="Models\SeleniumSideModel.cs" />
     <Compile Include="Models\SeleniumSuiteModel.cs" />

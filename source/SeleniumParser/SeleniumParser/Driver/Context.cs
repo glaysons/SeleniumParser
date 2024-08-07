@@ -21,13 +21,17 @@ namespace SeleniumParser.Driver
 
 		public IDictionary<Type, Delegate> Events { get; }
 
-		public Context(IWebDriver driver)
+		public IDictionary<string,object> Variables { get; set; }
+
+        public Context(IWebDriver driver)
 		{
 			Driver = driver;
 			Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
 			Actions = new Actions(driver);
 			Events = new Dictionary<Type, Delegate>();
-		}
+            Variables = new Dictionary<string, object>();
+
+        }
 
 	}
 }

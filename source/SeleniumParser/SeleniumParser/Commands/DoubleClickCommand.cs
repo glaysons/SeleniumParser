@@ -7,9 +7,9 @@ namespace SeleniumParser.Commands
 {
 	public class DoubleClickCommand : Command
 	{
-		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel comand)
+		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel command)
 		{
-			var element = SearchElement(comand);
+			var element = SearchElement(command);
 
 			element
 				.Should()
@@ -19,7 +19,7 @@ namespace SeleniumParser.Commands
 
 			var customEvent = GetCustomEvent<DoubleClickCommandDelegate>();
 
-			customEvent?.Invoke(tests, test, comand, element, ref preventDefault);
+			customEvent?.Invoke(tests, test, command, element, ref preventDefault);
 
 			if (!preventDefault)
 				Current.Actions.DoubleClick(element).Perform();

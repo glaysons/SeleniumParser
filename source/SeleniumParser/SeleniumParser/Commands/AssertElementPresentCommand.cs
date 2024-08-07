@@ -7,9 +7,9 @@ namespace SeleniumParser.Commands
 	public class AssertElementPresentCommand : Command
 	{
 
-		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel comand)
+		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel command)
 		{
-			var element = SearchElement(comand);
+			var element = SearchElement(command);
 
 			element
 				.Should()

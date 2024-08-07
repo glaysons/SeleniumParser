@@ -7,9 +7,9 @@ namespace SeleniumParser.Commands
 {
 	public class TypeCommand : Command
 	{
-		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel comand)
+		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel command)
 		{
-			var element = SearchElement(comand);
+			var element = SearchElement(command);
 
 			element
 				.Should()
@@ -19,9 +19,9 @@ namespace SeleniumParser.Commands
 
 			var customEvent = GetCustomEvent<TypeCommandDelegate>();
 
-			var value = comand.Value;
+			var value = command.Value;
 
-			customEvent?.Invoke(tests, test, comand, element, ref value, ref preventDefault);
+			customEvent?.Invoke(tests, test, command, element, ref value, ref preventDefault);
 
 			if (!preventDefault)
 				element.SendKeys(value);

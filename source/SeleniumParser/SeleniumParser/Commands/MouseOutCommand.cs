@@ -5,7 +5,7 @@ namespace SeleniumParser.Commands
 {
 	public class MouseOutCommand : Command
 	{
-		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel comand)
+		public override void Perform(SeleniumSideModel tests, SeleniumTestModel test, SeleniumCommandModel command)
 		{
 
 		}
